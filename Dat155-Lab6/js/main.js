@@ -9,6 +9,11 @@ import {
     DirectionalLight,
     Vector3,
     AxesHelper,
+    SphereGeometry,
+    DoubleSide,
+    MeshBasicMaterial,
+    ShaderMaterial,
+    ImageUtils, SpriteMaterial, Sprite
 } from './lib/three.module.js';
 
 import Utilities from './lib/Utilities.js';
@@ -18,6 +23,14 @@ import TextureSplattingMaterial from './materials/TextureSplattingMaterial.js';
 import TerrainBufferGeometry from './terrain/TerrainBufferGeometry.js';
 import { GLTFLoader } from './loaders/GLTFLoader.js';
 import { SimplexNoise } from './lib/SimplexNoise.js';
+
+import SkyDome from './terrain/SkyDome.js';
+import Terrain from "./terrain/Terrain.js";
+import Water from "./terrain/Water.js";
+import Lava from "./terrain/Lava.js";
+import Cloud from "./terrain/Cloud.js";
+import SkyBox from "./terrain/SkyBox.js";
+
 
 async function main() {
 
@@ -53,6 +66,7 @@ async function main() {
      */
     document.body.appendChild(renderer.domElement);
 
+
     /**
      * Add light
      */
@@ -80,14 +94,14 @@ async function main() {
 
     /**
      * Add terrain:
-     * 
+     *
      * We have to wait for the image file to be loaded by the browser.
      * There are many ways to handle asynchronous flow in your application.
      * We are using the async/await language constructs of Javascript:
      *  - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
      */
-    const heightmapImage = await Utilities.loadImage('resources/images/heightmap.png');
-    const width = 100;
+    const heightmapImage = await Utilities.loadImage('resources/images/volcano1.jpg');
+    const width = 300;
 
     const simplex = new SimplexNoise();
     const terrainGeometry = new TerrainBufferGeometry({
@@ -95,7 +109,7 @@ async function main() {
         heightmapImage,
         // noiseFn: simplex.noise.bind(simplex),
         numberOfSubdivisions: 128,
-        height: 20
+        height: 40
     });
 
     const grassTexture = new TextureLoader().load('resources/textures/grass_02.png');
@@ -125,11 +139,13 @@ async function main() {
 
     scene.add(terrain);
 
+
+
     /**
      * Add trees
      */
 
-    // instantiate a GLTFLoader:
+        // instantiate a GLTFLoader:
     const loader = new GLTFLoader();
 
     loader.load(
@@ -137,15 +153,15 @@ async function main() {
         'resources/models/kenney_nature_kit/tree_thin.glb',
         // called when resource is loaded
         (object) => {
-            for (let x = -50; x < 50; x += 8) {
-                for (let z = -50; z < 50; z += 8) {
-                    
+            for (let x = -75; x < 150; x += 12) {
+                for (let z = -75; z < 150; z += 12) {
+
                     const px = x + 1 + (6 * Math.random()) - 3;
                     const pz = z + 1 + (6 * Math.random()) - 3;
 
                     const height = terrainGeometry.getHeightAt(px, pz);
 
-                    if (height < 5) {
+                    if (height < 20 && height > 10) {
                         const tree = object.scene.children[0].clone();
 
                         tree.traverse((child) => {
@@ -154,7 +170,7 @@ async function main() {
                                 child.receiveShadow = true;
                             }
                         });
-                        
+
                         tree.position.x = px;
                         tree.position.y = height - 0.01;
                         tree.position.z = pz;
@@ -162,6 +178,7 @@ async function main() {
                         tree.rotation.y = Math.random() * (2 * Math.PI);
 
                         tree.scale.multiplyScalar(1.5 + Math.random() * 1);
+
 
                         scene.add(tree);
                     }
@@ -176,6 +193,74 @@ async function main() {
             console.error('Error loading model.', error);
         }
     );
+
+    /**
+     * Adding a skyDome
+     */
+    //let skyDome = new SkyDome();
+    //scene.add(skyDome);
+
+    let skyBox = new SkyBox();
+    scene.add(skyBox);
+
+    /**
+     * Add clouds
+     */
+    //let cloud = new Cloud();
+    //scene.add(cloud);
+    function generateBillboardClouds() {
+        let loader = new TextureLoader();
+        for (let i = 0; i < 20; i++) {
+            let cloudTextures = [
+                loader.load('resources/cloud/cloud1.png'), //Laster inn noen skyteksturer
+                loader.load('resources/cloud/cloud2.png'),
+                loader.load('resources/cloud/cloud3.png'),
+                loader.load('resources/cloud/cloud4.png')
+            ];
+
+
+            //let random = Math.floor(Math.random() * 4);
+            let material = new SpriteMaterial({
+                map: cloudTextures[3],
+                color: 0xffffff,
+                transparent: true,
+                opacity: 3.0,
+                side: DoubleSide
+            });
+
+            let skyPlane = new Sprite(material);
+
+            //Positions- plasser litt tilfeldig
+            let pX = Math.random() * 1000 - 500;
+            let pZ = Math.random() * 1000 - 500;
+            let pY = Math.random() * 50 + 100;
+
+            let s1 = 50;
+            let s2 = 50;
+
+            //Set positions and scale
+            skyPlane.position.set(pX, pY, pZ);
+            skyPlane.scale.set(s1, s2, 1);
+            skyPlane.rotation.z = Math.PI / 2;
+
+            scene.add(skyPlane);
+        }
+    }
+    generateBillboardClouds();
+
+
+    /**
+     * Add water
+     */
+    //let water = new Water();
+    //scene.add(water);
+
+    /**
+     * Add lava
+     */
+    let lava = new Lava();
+    scene.add(lava);
+
 
     /**
      * Set up camera controller:
