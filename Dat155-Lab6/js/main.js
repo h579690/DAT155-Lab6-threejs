@@ -30,6 +30,7 @@ import Water from "./terrain/Water.js";
 import Lava from "./terrain/Lava.js";
 import Cloud from "./terrain/Cloud.js";
 import SkyBox from "./terrain/SkyBox.js";
+//import Fog from "./terrain/Fog.js";
 
 
 async function main() {
@@ -261,6 +262,11 @@ async function main() {
     let lava = new Lava();
     scene.add(lava);
 
+    /**
+     * Add fog
+     */
+    //let fog = new Fog();
+    //scene.add(fog);
 
     /**
      * Set up camera controller:
@@ -298,6 +304,7 @@ async function main() {
         backward: false,
         left: false,
         right: false,
+        up: false,
         speed: 0.01
     };
 
@@ -313,6 +320,9 @@ async function main() {
             e.preventDefault();
         } else if (e.code === 'KeyD') {
             move.right = true;
+            e.preventDefault();
+        } else if (e.code === 'Space') {
+            move.up = true;
             e.preventDefault();
         }
     });
@@ -330,6 +340,9 @@ async function main() {
         } else if (e.code === 'KeyD') {
             move.right = false;
             e.preventDefault();
+        } else if (e.code === 'Space') {
+            move.up = false;
+            e.preventDefault();
         }
     });
 
@@ -341,7 +354,7 @@ async function main() {
         const delta = now - then;
         then = now;
 
-        const moveSpeed = move.speed * delta;
+        const moveSpeed = move.speed * delta * 5;
 
         velocity.set(0.0, 0.0, 0.0);
 
@@ -359,6 +372,10 @@ async function main() {
 
         if (move.backward) {
             velocity.z += moveSpeed;
+        }
+
+        if (move.up) {
+            velocity.y += moveSpeed;
         }
 
         // update controller rotation.
