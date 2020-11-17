@@ -284,6 +284,20 @@ async function main() {
     scene.add( water );
 
     /**
+     * Bevegelse i vannet
+     */
+    function animate() {
+
+        requestAnimationFrame( animate );
+        water.material.uniforms[ 'time' ].value += 1.0 / 120.0;
+
+        renderer.render( scene, camera );
+
+    }
+
+    animate();
+
+    /**
      * Add lava
      */
     let lava = new Lava();
@@ -294,6 +308,7 @@ async function main() {
      */
     //let fog = new Fog();
     //scene.add(fog);
+
 
     /**
      * Set up camera controller:
