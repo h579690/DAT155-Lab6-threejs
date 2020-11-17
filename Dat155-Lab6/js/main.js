@@ -16,20 +16,25 @@ import {
     ImageUtils, SpriteMaterial, Sprite
 } from './lib/three.module.js';
 
+import * as THREE from './lib/three.module.js';
+
 import Utilities from './lib/Utilities.js';
 import MouseLookController from './controls/MouseLookController.js';
 
 import TextureSplattingMaterial from './materials/TextureSplattingMaterial.js';
 import TerrainBufferGeometry from './terrain/TerrainBufferGeometry.js';
+
 import { GLTFLoader } from './loaders/GLTFLoader.js';
 import { SimplexNoise } from './lib/SimplexNoise.js';
+import { Water } from "./terrain/Water.js";
 
 import SkyDome from './terrain/SkyDome.js';
 import Terrain from "./terrain/Terrain.js";
-import Water from "./terrain/Water.js";
+
 import Lava from "./terrain/Lava.js";
 import Cloud from "./terrain/Cloud.js";
 import SkyBox from "./terrain/SkyBox.js";
+
 //import Fog from "./terrain/Fog.js";
 
 
@@ -253,8 +258,30 @@ async function main() {
     /**
      * Add water
      */
-    //let water = new Water();
-    //scene.add(water);
+    const waterGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+
+    let water = new Water(
+        waterGeometry,
+        {
+            textureWidth: 512,
+            textureHeight: 512,
+            waterNormals: new THREE.TextureLoader().load( 'resources/images/waternormals.jpg', function ( texture ) {
+
+                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+            } ),
+            alpha: 1.0,
+            sunDirection: new THREE.Vector3(),
+            sunColor: 0xffffff,
+            waterColor: 0x001e0f,
+            distortionScale: 3.7,
+            fog: scene.fog !== undefined
+        }
+    );
+
+    water.rotation.x = - Math.PI / 2;
+    water.translateZ(2);
+    scene.add( water );
 
     /**
      * Add lava
