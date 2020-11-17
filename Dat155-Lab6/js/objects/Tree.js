@@ -6,9 +6,13 @@ import {Object3D} from "../lib/three.module.js";
  */
 
 export default class Tree extends Object3D {
-    constructor(terrainGeometry) {
+    constructor(scene, terrainGeometry) {
         super();
+        this.scene = scene;
+        this.terrainGeometry = terrainGeometry;
+    }
 
+    generateTrees() {
         // instantiate a GLTFLoader:
         const loader = new GLTFLoader();
 
@@ -17,15 +21,15 @@ export default class Tree extends Object3D {
             'resources/models/kenney_nature_kit/tree_thin.glb',
             // called when resource is loaded
             (object) => {
-                for (let x = -50; x < 50; x += 8) {
-                    for (let z = -50; z < 50; z += 8) {
+                for (let x = -75; x < 150; x += 12) {
+                    for (let z = -75; z < 150; z += 12) {
 
                         const px = x + 1 + (6 * Math.random()) - 3;
                         const pz = z + 1 + (6 * Math.random()) - 3;
 
-                        const height = terrainGeometry.getHeightAt(px, pz);
+                        const height = this.terrainGeometry.getHeightAt(px, pz);
 
-                        if (height < 5) {
+                        if (height < 20 && height > 10) {
                             const tree = object.scene.children[0].clone();
 
                             tree.traverse((child) => {
@@ -41,7 +45,10 @@ export default class Tree extends Object3D {
 
                             tree.rotation.y = Math.random() * (2 * Math.PI);
 
-                            tree.scale.multiplyScalar(1.5 + Math.random() * 1);
+                            tree.scale.multiplyScalar(2 + Math.random() * 6);
+
+
+                            this.scene.add(tree);
                         }
 
                     }
@@ -53,9 +60,6 @@ export default class Tree extends Object3D {
             (error) => {
                 console.error('Error loading model.', error);
             }
-
-
         );
-
     }
 }
