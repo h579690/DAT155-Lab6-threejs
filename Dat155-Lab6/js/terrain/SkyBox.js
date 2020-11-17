@@ -13,7 +13,7 @@ export default class SkyBox extends Object3D {
 
         let loader = new TextureLoader();
 
-        let skyGeometry = new BoxGeometry( 520, 520, 520);
+        let skyGeometry = new BoxGeometry( 1200, 1200, 1200);
 
 
         let texture_bk = loader.load('resources/skydome/yonder_bk.jpg');
@@ -57,6 +57,8 @@ export default class SkyBox extends Object3D {
         materialArray.push(mat_rt);
         materialArray.push(mat_lf);
 
+        for(let i =0; i < 6; i++)
+            materialArray[i].side = BackSide;
 
         let skybox = new Mesh( skyGeometry, materialArray );
         this.add( skybox );
