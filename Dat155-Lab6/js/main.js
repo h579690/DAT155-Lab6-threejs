@@ -13,7 +13,7 @@ import {
     DoubleSide,
     MeshBasicMaterial,
     ShaderMaterial,
-    ImageUtils, SpriteMaterial, Sprite
+    ImageUtils, SpriteMaterial, Sprite, Raycaster
 } from './lib/three.module.js';
 
 import * as THREE from './lib/three.module.js';
@@ -33,6 +33,7 @@ import Terrain from "./terrain/Terrain.js";
 
 import Lava from "./terrain/Lava.js";
 import SkyBox from "./terrain/SkyBox.js";
+import Grass from "./terrain/Grass.js";
 
 import Tree from "./objects/Tree.js";
 import Cloud from "./objects/Cloud.js";
@@ -147,6 +148,42 @@ async function main() {
     terrain.receiveShadow = true;
 
     scene.add(terrain);
+
+    /**
+     * Add Grass
+     */
+
+    let GrassTexture = new TextureLoader().load('./resources/textures/Grassbillboardtexture.png');
+
+    let x;
+    let z;
+
+    function makeGrass(grass){
+        x = Math.floor(Math.random()*49) + 60;
+        x *= Math.floor(Math.random()*2) === 1 ? 1 : -1;
+        z = Math.floor(Math.random()*49) + 1;
+        z *= Math.floor(Math.random()*2) === 1 ? 1 : -1;
+
+        const raycaster = new Raycaster();
+        const direction = new Vector3(0.0, -1.0, 0.0);
+        //const move = new Vector3();
+
+        raycaster.set(new Vector3(x, 150, z), direction);
+        let array = raycaster.intersectObject(terrain);
+
+        if(array[0].point.y<25 && array[0].point.y>10) {
+            grass.position.set(array[0].point.x, array[0].point.y+0.3, array[0].point.z);
+            scene.add(grass);
+        }else{
+            makeGrass(grass);
+        }
+    }
+
+    for(let i =0; i<10; i++){
+        const grass = new Grass({texture:GrassTexture});
+        makeGrass(grass);
+    }
+
 
 
     /**
