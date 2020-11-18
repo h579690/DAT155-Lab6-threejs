@@ -36,6 +36,7 @@ import SkyBox from "./terrain/SkyBox.js";
 
 import Tree from "./objects/Tree.js";
 import Cloud from "./objects/Cloud.js";
+import Box from "./objects/Box.js";
 
 //import Fog from "./terrain/Fog.js";
 
@@ -201,19 +202,6 @@ async function main() {
     water.translateZ(2);
     scene.add( water );
 
-    /**
-     * Bevegelse i vannet
-     */
-    function animate() {
-
-        requestAnimationFrame( animate );
-        water.material.uniforms[ 'time' ].value += 1.0 / 120.0;
-
-        renderer.render( scene, camera );
-
-    }
-
-    animate();
 
     /**
      * Add lava
@@ -227,6 +215,28 @@ async function main() {
     //let fog = new Fog();
     //scene.add(fog);
 
+
+    /**
+     * Add box
+     */
+    let box = new Box(scene);
+    scene.add(box);
+
+
+    /**
+     * Animasjoner
+     */
+    function animate() {
+
+        requestAnimationFrame( animate );
+        water.material.uniforms[ 'time' ].value += 1.0 / 120.0;
+
+        //box.rotation.z -= 0.01;
+
+        renderer.render( scene, camera );
+
+    }
+    animate();
 
     /**
      * Set up camera controller:
