@@ -47,6 +47,10 @@ async function main() {
 
     const scene = new Scene();
 
+    /**
+     * Tåke
+     * @type {Fog}
+     */
     scene.fog = new Fog(0xb8b8b8, 0.1, 650);
 
     const axesHelper = new AxesHelper(15);
