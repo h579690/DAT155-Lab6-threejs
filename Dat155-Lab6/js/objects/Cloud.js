@@ -12,7 +12,7 @@ export default class Cloud {
 
     generateBillboardClouds() {
         const loader = new TextureLoader();
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 50; i++) {
             let cloudTextures = [
                 loader.load('resources/cloud/cloud1.png'), //Laster inn noen skyteksturer
                 loader.load('resources/cloud/cloud2.png'),
@@ -25,7 +25,6 @@ export default class Cloud {
                 map: cloudTextures[3],
                 color: 0xffffff,
                 transparent: true,
-                deptTest: true,
                 fog: true,
                 opacity: 0.5,
                 side: DoubleSide

@@ -35,8 +35,8 @@ import Terrain from "./terrain/Terrain.js";
 
 import Lava from "./terrain/Lava.js";
 import SkyBox from "./terrain/SkyBox.js";
-import Grass from "./terrain/Grass.js";
 
+import Grass from "./objects/Grass.js";
 import Tree from "./objects/Tree.js";
 import Cloud from "./objects/Cloud.js";
 import Box from "./objects/Box.js";
