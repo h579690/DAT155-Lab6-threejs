@@ -3,7 +3,8 @@ import {
     TextureLoader,
     Mesh,
     BoxGeometry,
-    MeshPhongMaterial
+    MeshPhongMaterial,
+    DoubleSide
 } from "../lib/three.module.js";
 
 export default class Box extends Object3D {
@@ -24,7 +25,8 @@ export default class Box extends Object3D {
                 color: 0xffffff,
                 map: texture,
                 bumpMap: bumpMap,
-                normalMap: normalMap
+                normalMap: normalMap,
+                side: DoubleSide
             })
         );
 

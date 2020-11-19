@@ -14,7 +14,8 @@ import {
     MeshBasicMaterial,
     ShaderMaterial,
     ImageUtils, SpriteMaterial, Sprite, Raycaster,
-    Fog
+    Fog,
+    FogExp2
 } from './lib/three.module.js';
 
 import * as THREE from './lib/three.module.js';
@@ -51,7 +52,9 @@ async function main() {
      * Tåke
      * @type {Fog}
      */
-    scene.fog = new Fog(0xb8b8b8, 0.1, 650);
+    scene.fog = new FogExp2(0xb8b8b8, 0.0025);
+    //FogExp2(farge, tetthet)
+
 
     const axesHelper = new AxesHelper(15);
     scene.add(axesHelper);
@@ -237,7 +240,7 @@ async function main() {
             sunDirection: new THREE.Vector3(),
             sunColor: 0xffffff,
             waterColor: 0x001e0f,
-            distortionScale: 3.7,
+            distortionScale: 5,
             fog: scene.fog !== undefined
         }
     );
