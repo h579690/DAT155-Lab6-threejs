@@ -31,8 +31,13 @@ export default class Box extends Object3D {
         );
 
         box.position.set(-73, 14, -70);
+
         box.receiveShadow = true;
         box.castShadow = true;
+
+        box.rotateX(1);
+        box.rotateZ(1);
+        box.rotateY(1);
 
         this.add(box);
 

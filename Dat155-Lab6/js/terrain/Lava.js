@@ -6,7 +6,7 @@ export default class Lava extends Object3D {
 
         let loader = new TextureLoader();
 
-        let lavaGeometry = new PlaneGeometry(60, 57, 32, 32);
+        let lavaGeometry = new PlaneGeometry(45, 85, 32, 32);
 
         let lavaTexture = loader.load('resources/textures/lava4.png');
         let lavaNormalMap = loader.load('resources/images/lava_normal.jpg');
@@ -25,8 +25,8 @@ export default class Lava extends Object3D {
         this.lava = new Mesh(lavaGeometry, lavaMaterial);
 
         this.lava.rotation.x = -Math.PI / 2;
-        this.lava.rotation.z = Math.PI / 6;
-        this.lava.position.set(-5, 5, -19)
+        //this.lava.rotation.z = Math.PI / 6;
+        this.lava.position.set(0, 5, 30)
 
         this.add(this.lava);
     }

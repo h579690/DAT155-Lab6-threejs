@@ -9,12 +9,7 @@ import {
     DirectionalLight,
     Vector3,
     AxesHelper,
-    SphereGeometry,
-    DoubleSide,
-    MeshBasicMaterial,
-    ShaderMaterial,
-    ImageUtils, SpriteMaterial, Sprite, Raycaster,
-    Fog,
+    Raycaster,
     FogExp2
 } from './lib/three.module.js';
 
@@ -26,12 +21,10 @@ import MouseLookController from './controls/MouseLookController.js';
 import TextureSplattingMaterial from './materials/TextureSplattingMaterial.js';
 import TerrainBufferGeometry from './terrain/TerrainBufferGeometry.js';
 
-import { GLTFLoader } from './loaders/GLTFLoader.js';
 import { SimplexNoise } from './lib/SimplexNoise.js';
 import { Water } from "./terrain/Water.js";
 
 import SkyDome from './terrain/SkyDome.js';
-import Terrain from "./terrain/Terrain.js";
 
 import Lava from "./terrain/Lava.js";
 import SkyBox from "./terrain/SkyBox.js";
@@ -40,8 +33,6 @@ import Grass from "./objects/Grass.js";
 import Tree from "./objects/Tree.js";
 import Cloud from "./objects/Cloud.js";
 import Box from "./objects/Box.js";
-
-//import Fog from "./terrain/Fog.js";
 
 
 async function main() {
@@ -246,7 +237,7 @@ async function main() {
     );
 
     water.rotation.x = - Math.PI / 2;
-    water.translateZ(2);
+    water.translateZ(4.9);
     scene.add( water );
 
 
@@ -256,11 +247,6 @@ async function main() {
     let lava = new Lava();
     scene.add(lava);
 
-    /**
-     * Add fog
-     */
-    //let fog = new Fog();
-    //scene.add(fog);
 
 
     /**
@@ -277,8 +263,6 @@ async function main() {
 
         requestAnimationFrame( animate );
         water.material.uniforms[ 'time' ].value += 1.0 / 120.0;
-
-        //box.rotation.y -= 0.01;
 
         renderer.render( scene, camera );
 
