@@ -37,11 +37,7 @@ export default class Cloud {
             let pX = Math.random() * 1000 - 500;
             let pZ = Math.random() * 1000 - 500;
             let pY = Math.random() * 50 + 100;
-            if (i < 2) {
-                pX = 185;
-                pY = 100;
-                pZ = 185;
-            }
+
             let s1 = 50;
             let s2 = 50;
 
