@@ -30,7 +30,7 @@ export default class Box extends Object3D {
             })
         );
 
-        box.position.set(-73, 14, -50);
+        box.position.set(-73, 14, -70);
         box.receiveShadow = true;
         box.castShadow = true;
 
