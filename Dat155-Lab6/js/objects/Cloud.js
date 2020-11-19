@@ -25,8 +25,11 @@ export default class Cloud {
                 map: cloudTextures[3],
                 color: 0xffffff,
                 transparent: true,
-                opacity: 3.0,
+                deptTest: true,
+                fog: true,
+                opacity: 0.5,
                 side: DoubleSide
+
             });
 
             let skyPlane = new Sprite(material);
