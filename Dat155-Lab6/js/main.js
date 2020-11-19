@@ -43,7 +43,7 @@ async function main() {
      *
      * @type {FogExp2}
      */
-    scene.fog = new FogExp2(0xb8b8b8, 0.0025);
+    scene.fog = new FogExp2(0xbc9fcc, 0.0025);
     //FogExp2(farge, tetthet)
 
 
@@ -230,7 +230,7 @@ async function main() {
             alpha: 1.0,
             sunDirection: new THREE.Vector3(),
             sunColor: 0xffffff,
-            waterColor: 0x001e0f,
+            waterColor: 0x68d9c6,
             distortionScale: 5,
             fog: scene.fog !== undefined
         }
