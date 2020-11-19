@@ -28,6 +28,8 @@ export default class SkyBox extends Object3D {
             map: texture_bk,
             side: BackSide
         });
+
+
         let mat_dn = new MeshBasicMaterial( {
             map: texture_dn,
             side: BackSide

@@ -49,8 +49,8 @@ async function main() {
     const scene = new Scene();
 
     /**
-     * Tåke
-     * @type {Fog}
+     *
+     * @type {FogExp2}
      */
     scene.fog = new FogExp2(0xb8b8b8, 0.0025);
     //FogExp2(farge, tetthet)
