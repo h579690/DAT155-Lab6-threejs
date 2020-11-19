@@ -13,7 +13,8 @@ import {
     DoubleSide,
     MeshBasicMaterial,
     ShaderMaterial,
-    ImageUtils, SpriteMaterial, Sprite, Raycaster
+    ImageUtils, SpriteMaterial, Sprite, Raycaster,
+    Fog
 } from './lib/three.module.js';
 
 import * as THREE from './lib/three.module.js';
@@ -45,6 +46,8 @@ import Box from "./objects/Box.js";
 async function main() {
 
     const scene = new Scene();
+
+    scene.fog = new Fog(0xb8b8b8, 0.1, 650);
 
     const axesHelper = new AxesHelper(15);
     scene.add(axesHelper);
@@ -268,7 +271,7 @@ async function main() {
         requestAnimationFrame( animate );
         water.material.uniforms[ 'time' ].value += 1.0 / 120.0;
 
-        //box.rotation.z -= 0.01;
+        //box.rotation.y -= 0.01;
 
         renderer.render( scene, camera );
 

@@ -45,7 +45,7 @@ export default class Tree extends Object3D {
 
                             tree.rotation.y = Math.random() * (2 * Math.PI);
 
-                            tree.scale.multiplyScalar(2 + Math.random() * 6);
+                            tree.scale.multiplyScalar(3 + Math.random() * 7);
 
 
                             this.scene.add(tree);
