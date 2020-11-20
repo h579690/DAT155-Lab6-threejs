@@ -10,7 +10,7 @@ import {
     Vector3,
     AxesHelper,
     Raycaster,
-    FogExp2
+    FogExp2,
 } from './lib/three.module.js';
 
 import * as THREE from './lib/three.module.js';
@@ -26,13 +26,13 @@ import { Water } from "./terrain/Water.js";
 
 import SkyDome from './terrain/SkyDome.js';
 
-import Lava from "./terrain/Lava.js";
-import SkyBox from "./terrain/SkyBox.js";
+import Lava from './terrain/Lava.js';
+import SkyBox from './terrain/SkyBox.js';
 
-import Grass from "./objects/Grass.js";
-import Tree from "./objects/Tree.js";
-import Cloud from "./objects/Cloud.js";
-import Box from "./objects/Box.js";
+import Grass from './objects/Grass.js';
+import Tree from './objects/Tree.js';
+import Cloud from './objects/Cloud.js';
+import Box from './objects/Box.js';
 
 
 async function main() {
@@ -44,7 +44,6 @@ async function main() {
      * @type {FogExp2}
      */
     scene.fog = new FogExp2(0xbc9fcc, 0.0025);
-    //FogExp2(farge, tetthet)
 
 
     const axesHelper = new AxesHelper(15);
@@ -150,10 +149,10 @@ async function main() {
 
     scene.add(terrain);
 
+
     /**
      * Add Grass
      */
-
     let GrassTexture = new TextureLoader().load('./resources/textures/Grassbillboardtexture.png');
 
     let x;
@@ -190,7 +189,6 @@ async function main() {
     /**
      * Add trees
      */
-
     let tree = new Tree(scene, terrainGeometry);
     tree.generateTrees();
 
@@ -246,7 +244,6 @@ async function main() {
      */
     let lava = new Lava();
     scene.add(lava);
-
 
 
     /**

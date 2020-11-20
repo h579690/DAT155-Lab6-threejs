@@ -46,7 +46,6 @@ export default class Cloud {
             skyPlane.scale.set(s1, s2, 1);
             skyPlane.rotation.z = Math.PI / 2;
 
-
             this.scene.add(skyPlane);
         }
     }

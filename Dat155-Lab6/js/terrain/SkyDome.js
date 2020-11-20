@@ -1,13 +1,9 @@
 import {
     Mesh,
-    SphereGeometry,
     TextureLoader,
     MeshBasicMaterial,
     SphereBufferGeometry,
-    Object3D,
-    MeshPhongMaterial,
-    BoxGeometry,
-    BackSide
+    Object3D
 } from "../lib/three.module.js";
 
 /**

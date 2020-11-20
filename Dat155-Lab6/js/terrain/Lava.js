@@ -18,14 +18,12 @@ export default class Lava extends Object3D {
         let lavaMaterial = new MeshPhongMaterial({
             map: lavaTexture,
             normalMap: lavaNormalMap,
-            opacity: 3.0,
             side: 2
         })
 
         this.lava = new Mesh(lavaGeometry, lavaMaterial);
 
         this.lava.rotation.x = -Math.PI / 2;
-        //this.lava.rotation.z = Math.PI / 6;
         this.lava.position.set(0, 5, 30)
 
         this.add(this.lava);
