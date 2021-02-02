@@ -9,19 +9,42 @@ import {
     DirectionalLight,
     Vector3,
     AxesHelper,
+    Raycaster,
+    FogExp2,
 } from './lib/three.module.js';
+
+import * as THREE from './lib/three.module.js';
 
 import Utilities from './lib/Utilities.js';
 import MouseLookController from './controls/MouseLookController.js';
 
 import TextureSplattingMaterial from './materials/TextureSplattingMaterial.js';
 import TerrainBufferGeometry from './terrain/TerrainBufferGeometry.js';
-import { GLTFLoader } from './loaders/GLTFLoader.js';
+
 import { SimplexNoise } from './lib/SimplexNoise.js';
+import { Water } from "./terrain/Water.js";
+
+import SkyDome from './terrain/SkyDome.js';
+
+import Lava from './terrain/Lava.js';
+import SkyBox from './terrain/SkyBox.js';
+
+import Grass from './objects/Grass.js';
+import Tree from './objects/Tree.js';
+import Cloud from './objects/Cloud.js';
+import Box from './objects/Box.js';
+
 
 async function main() {
 
     const scene = new Scene();
+
+    /**
+     *
+     * @type {FogExp2}
+     */
+    scene.fog = new FogExp2(0xbc9fcc, 0.0025);
+
 
     const axesHelper = new AxesHelper(15);
     scene.add(axesHelper);
@@ -53,6 +76,7 @@ async function main() {
      */
     document.body.appendChild(renderer.domElement);
 
+
     /**
      * Add light
      */
@@ -80,14 +104,14 @@ async function main() {
 
     /**
      * Add terrain:
-     * 
+     *
      * We have to wait for the image file to be loaded by the browser.
      * There are many ways to handle asynchronous flow in your application.
      * We are using the async/await language constructs of Javascript:
      *  - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
      */
-    const heightmapImage = await Utilities.loadImage('resources/images/heightmap.png');
-    const width = 100;
+    const heightmapImage = await Utilities.loadImage('resources/images/images.jpg');
+    const width = 300;
 
     const simplex = new SimplexNoise();
     const terrainGeometry = new TerrainBufferGeometry({
@@ -95,7 +119,7 @@ async function main() {
         heightmapImage,
         // noiseFn: simplex.noise.bind(simplex),
         numberOfSubdivisions: 128,
-        height: 20
+        height: 40
     });
 
     const grassTexture = new TextureLoader().load('resources/textures/grass_02.png');
@@ -103,7 +127,7 @@ async function main() {
     grassTexture.wrapT = RepeatWrapping;
     grassTexture.repeat.set(5000 / width, 5000 / width);
 
-    const snowyRockTexture = new TextureLoader().load('resources/textures/snowy_rock_01.png');
+    const snowyRockTexture = new TextureLoader().load('resources/textures/stone_04.jpg');
     snowyRockTexture.wrapS = RepeatWrapping;
     snowyRockTexture.wrapT = RepeatWrapping;
     snowyRockTexture.repeat.set(1500 / width, 1500 / width);
@@ -125,57 +149,122 @@ async function main() {
 
     scene.add(terrain);
 
+
+    /**
+     * Add Grass
+     */
+    let GrassTexture = new TextureLoader().load('./resources/textures/Grassbillboardtexture.png');
+
+    let x;
+    let z;
+
+    function makeGrass(grass){
+        x = Math.floor(Math.random()*49) + 60;
+        x *= Math.floor(Math.random()*2) === 1 ? 1 : -1;
+        z = Math.floor(Math.random()*49) + 1;
+        z *= Math.floor(Math.random()*2) === 1 ? 1 : -1;
+
+        const raycaster = new Raycaster();
+        const direction = new Vector3(0.0, -1.0, 0.0);
+        //const move = new Vector3();
+
+        raycaster.set(new Vector3(x, 150, z), direction);
+        let array = raycaster.intersectObject(terrain);
+
+        if(array[0].point.y<25 && array[0].point.y>10) {
+            grass.position.set(array[0].point.x, array[0].point.y+0.3, array[0].point.z);
+            scene.add(grass);
+        }else{
+            makeGrass(grass);
+        }
+    }
+
+    for(let i =0; i<10; i++){
+        const grass = new Grass({texture:GrassTexture});
+        makeGrass(grass);
+    }
+
+
+
     /**
      * Add trees
      */
+    let tree = new Tree(scene, terrainGeometry);
+    tree.generateTrees();
 
-    // instantiate a GLTFLoader:
-    const loader = new GLTFLoader();
 
-    loader.load(
-        // resource URL
-        'resources/models/kenney_nature_kit/tree_thin.glb',
-        // called when resource is loaded
-        (object) => {
-            for (let x = -50; x < 50; x += 8) {
-                for (let z = -50; z < 50; z += 8) {
-                    
-                    const px = x + 1 + (6 * Math.random()) - 3;
-                    const pz = z + 1 + (6 * Math.random()) - 3;
+    /**
+     * Adding a skyDome
+     */
+    //let skyDome = new SkyDome();
+    //scene.add(skyDome);
 
-                    const height = terrainGeometry.getHeightAt(px, pz);
+    let skyBox = new SkyBox();
+    scene.add(skyBox);
 
-                    if (height < 5) {
-                        const tree = object.scene.children[0].clone();
 
-                        tree.traverse((child) => {
-                            if (child.isMesh) {
-                                child.castShadow = true;
-                                child.receiveShadow = true;
-                            }
-                        });
-                        
-                        tree.position.x = px;
-                        tree.position.y = height - 0.01;
-                        tree.position.z = pz;
+    /**
+     * Add clouds
+     */
+    let clouds = new Cloud(scene);
+    clouds.generateBillboardClouds();
 
-                        tree.rotation.y = Math.random() * (2 * Math.PI);
 
-                        tree.scale.multiplyScalar(1.5 + Math.random() * 1);
+    /**
+     * Add water
+     */
+    const waterGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
 
-                        scene.add(tree);
-                    }
+    let water = new Water(
+        waterGeometry,
+        {
+            textureWidth: 512,
+            textureHeight: 512,
+            waterNormals: new THREE.TextureLoader().load( 'resources/images/waternormals.jpg', function ( texture ) {
 
-                }
-            }
-        },
-        (xhr) => {
-            console.log(((xhr.loaded / xhr.total) * 100) + '% loaded');
-        },
-        (error) => {
-            console.error('Error loading model.', error);
+                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+            } ),
+            alpha: 1.0,
+            sunDirection: new THREE.Vector3(),
+            sunColor: 0xffffff,
+            waterColor: 0x68d9c6,
+            distortionScale: 5,
+            fog: scene.fog !== undefined
         }
     );
+
+    water.rotation.x = - Math.PI / 2;
+    water.translateZ(4.9);
+    scene.add( water );
+
+
+    /**
+     * Add lava
+     */
+    let lava = new Lava();
+    scene.add(lava);
+
+
+    /**
+     * Add box
+     */
+    let box = new Box(scene);
+    scene.add(box);
+
+
+    /**
+     * Animasjoner
+     */
+    function animate() {
+
+        requestAnimationFrame( animate );
+        water.material.uniforms[ 'time' ].value += 1.0 / 120.0;
+
+        renderer.render( scene, camera );
+
+    }
+    animate();
 
     /**
      * Set up camera controller:
@@ -213,6 +302,7 @@ async function main() {
         backward: false,
         left: false,
         right: false,
+        up: false,
         speed: 0.01
     };
 
@@ -228,6 +318,9 @@ async function main() {
             e.preventDefault();
         } else if (e.code === 'KeyD') {
             move.right = true;
+            e.preventDefault();
+        } else if (e.code === 'Space') {
+            move.up = true;
             e.preventDefault();
         }
     });
@@ -245,6 +338,9 @@ async function main() {
         } else if (e.code === 'KeyD') {
             move.right = false;
             e.preventDefault();
+        } else if (e.code === 'Space') {
+            move.up = false;
+            e.preventDefault();
         }
     });
 
@@ -256,7 +352,7 @@ async function main() {
         const delta = now - then;
         then = now;
 
-        const moveSpeed = move.speed * delta;
+        const moveSpeed = move.speed * delta * 5;
 
         velocity.set(0.0, 0.0, 0.0);
 
@@ -274,6 +370,10 @@ async function main() {
 
         if (move.backward) {
             velocity.z += moveSpeed;
+        }
+
+        if (move.up) {
+            velocity.y += moveSpeed;
         }
 
         // update controller rotation.
